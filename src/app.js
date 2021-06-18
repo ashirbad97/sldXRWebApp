@@ -16,8 +16,8 @@ const app = express()
 const publicDirectoryPath = path.join(__dirname,'../public')
 const viewsPath = path.join(__dirname,'../templates/views')
 const partialsPath = path.join(__dirname,'../templates/partials')
-const publicCertificatePath = path.join(__dirname,'sslcert/dyslx.ashirbad.me.cer')
-const privateCertificatePath = path.join(__dirname,'sslcert/dyslx.ashirbad.me.key')
+const publicCertificatePath = path.join(__dirname,'sslcert/sldapp.ml.cer')
+const privateCertificatePath = path.join(__dirname,'sslcert/sldapp.ml.key')
 
 //  Path for SSL certificates
 const options = {
@@ -89,3 +89,4 @@ app.listen(80)
 https.createServer(options, app).listen(443,()=>{
   console.log("Secure Server has started running")
 });
+ 
