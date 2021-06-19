@@ -34,9 +34,9 @@ router.get('/level/:level',auth,async(req,res)=>{
 
 router.get('/level/:level/submodule/:submodule',auth,async(req,res)=>{
     try { 
-        const wordList = await SubModule.findWords(req.params.submodule)
         const subModuleName = await SubModule.findsubModuleName(req.params.submodule)
-        res.render('wordsHolder',{wordList,subModuleName})
+        subModuleName.wordList = await SubModule.findWords(req.params.submodule)
+        res.render('wordsHolder',{subModuleName})
     } catch (error) {
         console.log(error)
     }

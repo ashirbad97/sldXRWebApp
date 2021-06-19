@@ -37,7 +37,8 @@ subModuleSchema.statics.findWords = async(subModuleId)=>{
 }
 subModuleSchema.statics.findsubModuleName = async(subModuleId)=>{
     try {
-        const subModuleName = await SubModule.findOne({subModuleId}).select('subModuleName subModuleId extendedDetails').lean()
+        subModuleName = await SubModule.findOne({subModuleId}).select('subModuleName subModuleId extendedDetails').lean()
+        subModuleName.fullId = subModuleName.subModuleId
         subModuleName.subModuleId =  subModuleName.subModuleId.split("_",1)
         return subModuleName
     } catch (error) {
