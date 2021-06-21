@@ -9,8 +9,17 @@
                 <div id="XRModel" class="row align-items-center justify-content-center">
                     {{!-- <model-viewer src='../../../assets/3dobjects/{{../wordList.fullId}}/{{this.word}}.gltf'
                         ar auto-rotate camera-controls></model-viewer> --}}
-                        <model-viewer src='../../../assets/3dobjects/{{../wordList.fullId}}/{{this.word}}/{{this.word}}.gltf'
-                        ar auto-rotate camera-controls></model-viewer>
+                        <model-viewer src='../../../assets/3dobjects/{{../wordList.fullId}}/{{this.word}}/{{this.word}}.gltf' ar auto-rotate
+                            camera-controls>
+                            <button slot="ar-button" class="ar-button" id="ar-button-{{this._id}}"
+                                style="background-color: rgb(196, 245, 247); border-radius: 4px; border: none; position: absolute; top: 16px; right: 16px; ">
+                                View AR
+                            </button>
+                            <button slot="exit-webxr-ar-button"
+                                style="background-color: rgb(196, 245, 247); border-radius: 4px; border: none; position: absolute; top: 16px; right: 16px; ">
+                                Close AR
+                            </button>
+                        </model-viewer>
                     <span src='../../../assets/3dobjects/{{../wordList.fullId}}/{{this.word}}.gltf'> </span>
                 </div>
                 <h1 class="card-title">{{this.word}}</h1>

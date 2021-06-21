@@ -3,7 +3,7 @@ var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
 var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 var synth = window.speechSynthesis;
 voices = synth.getVoices();
-console.log("Supported Voices are : "+voices)
+console.log("Supported Voices are : " + voices)
 let currentDate = new Date();
 currentDate.setMinutes(currentDate.getMinutes() + 5)
 let time = currentDate.getHours() + ":" + currentDate.getMinutes()
@@ -43,16 +43,16 @@ generateSession().then((sessionId) => {
   SessionId = sessionId
 })
 // Function to 
-var playsubModuleName = (subModuleId,subModuleName)=> {
-  audioFileName = '../../../assets/audio/'+subModuleId+'/'+subModuleName.toUpperCase()+'.m4a'
+var playsubModuleName = (subModuleId, subModuleName) => {
+  audioFileName = '../../../assets/audio/' + subModuleId + '/' + subModuleName.toUpperCase() + '.m4a'
   var audio = new Audio(audioFileName)
   audio.crossOrigin = 'anonymous';
   var playPromise = audio.play()
   if (playPromise !== undefined) {
-    playPromise.then(function() {
+    playPromise.then(function () {
       // Automatic playback started!
       console.log("Played Audio Successfully")
-    }).catch(function(error) {
+    }).catch(function (error) {
       // Automatic playback failed.
       // Show a UI element to let the user manually start playback.
       console.log(error)
@@ -146,7 +146,7 @@ recognition.onresult = function (event) {
   displayArea.textContent = result;
   // confidenceValue = (event.results[0][0].confidence)*100
   // accuracyHolder.textContent = (confidenceValue).toFixed(2) + '%';
-  console.log('Word ID is :'+wordTarget)
+  console.log('Word ID is :' + wordTarget)
   console.log('Confidence: ' + event.results[0][0].confidence);
   // console.log(result)
   // console.log(correctVal)
@@ -181,17 +181,19 @@ changeBox = (wordTarget, comparisonResult) => {
   attemptboxId = '#attemptbox-' + wordTarget
   speakButtonId = '#speakButton-' + wordTarget
   listenButtonId = '#listenButton-' + wordTarget
-
+  arButtonId = '#ar-button-'+ wordTarget
   correctSound = '../../../assets/audio/others/correct.wav'
   incorrectSound = '../../../assets/audio/others/wrong.wav'
 
   var attemptBox = document.querySelector(attemptboxId)
   var listenButton = document.querySelector(listenButtonId)
   var speakButton = document.querySelector(speakButtonId)
-
   var attempts = attemptBox.getAttribute('value')
+  var arButton = document.querySelector(arButtonId)
+
   // If recognition is correct
   if (comparisonResult == true) {
+    arButton.style.display = "block"
     var audio = new Audio(correctSound)
     audio.play()
     if (attemptBox.classList.contains("card-header-warning")) {
@@ -233,11 +235,22 @@ changeBox = (wordTarget, comparisonResult) => {
 
 }
 
+hideAR=()=>{
+  var ar_button = document.querySelectorAll(".ar-button")
+  var i;
+  for (i = 0; i < ar_button.length; i++) {
+      ar_button[i].style.display = "none"
+  }
+}
+
+showAR=()=>{
+
+}
 timesUpModal = () => {
   $('#timesUpModal').modal('show')
   console.log("Modal Triggered");
 }
-playTickSound = ()=>{
+playTickSound = () => {
   tickSound = '../../../assets/audio/others/timer-with-ding.mp3'
   var tickSound = new Audio(tickSound)
   tickSound.play()
@@ -247,7 +260,8 @@ mainModuleRedirection = () => {
 }
 
 window.onload = function (event) {
-  setTimeout(playTickSound,275000)
+  hideAR()
+  setTimeout(playTickSound, 275000)
   setTimeout(timesUpModal, 300000)
   setTimeout(mainModuleRedirection, 300500)
 };
