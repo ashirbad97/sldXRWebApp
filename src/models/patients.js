@@ -3,7 +3,13 @@ const validator = require('validator')
 const passGenerator = require('generate-password')
 const jwt = require('jsonwebtoken')
 
+const crypto = require('crypto')
+const algorithim = 'aes-256-ctr'
+const secretKey= 'vOVH6sdmpNWjRRIqCc7rdxs01lwHzfr3'
+const iv = crypto.randomBytes(16);
+
 const GameLevel = require('../models/gameLevel')
+
 
 const patientSchema = new mongoose.Schema({
     patientId: {
@@ -11,49 +17,7 @@ const patientSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    gender: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    age: {
-        type: Number,
-        required: true,
-        trim: true
-    },
-    name: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    schoolStandard: {
-        type: String,
-        trim: true
-    },
-    interventionDate: {
-        type: Date,
-        required: true,
-        trim: true
-    },
-    scores: {
-        glad: {
-            type: Number,
-            trim: true
-        },
-        ctopp2: {
-            type: Number,
-            trim: true
-        },
-        wrat5: {
-            type: Number,
-            trim: true
-        }
-    },
-    fmriFindings: {
-        type: String,
-        trim: true
-    },
-    additionalData: {
+    personalData: {
         type: String,
         trim: true
     },
@@ -90,6 +54,7 @@ patientSchema.set('toJSON', { virtuals: true });
 patientSchema.pre('validate', async function (next) {
     try {
         const patient = this
+        
         if(!patient.password)
         {
             // console.log('Creating Password')
@@ -99,6 +64,9 @@ patientSchema.pre('validate', async function (next) {
                 uppercase: false
             })
             patient.password = password
+            encryptPatientData(patient.personalData).then((personalData)=>{
+            patient.personalData = JSON.stringify(personalData)
+            })
         }
         else{
             // console.log("Password Already Exists")
@@ -109,6 +77,14 @@ patientSchema.pre('validate', async function (next) {
     }
 })
 
+encryptPatientData = async(data)=>{
+    const cipher = crypto.createCipheriv(algorithim,secretKey,iv)
+    const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
+    var encryptedValue = new Object()
+    encryptedValue.iv = iv.toString('hex')
+    encryptedValue.content = encrypted.toString('hex')
+    return encryptedValue
+}
 patientSchema.statics.authenticateuser = async (username, password) => {
     const patient = await Patient.findOne({ patientId: username }).populate("noOfsessions")
     await patient.populate("currentLevel","levelId").execPopulate()
@@ -131,7 +107,20 @@ patientSchema.statics.findPatientDetailsfromToken = async (decoded,token) => {
         console.log(error)
     }
 }
-
+patientSchema.statics.findAllPatientDetails = async()=>{
+    try{
+        var allData = await Patient.find().select("patientId").sort({'_id': -1}).lean() // Did this as populate was not persisting Fix Later
+        var allPatientData = await Patient.find().select("patientId").sort({'_id': -1})
+        for(i=0;i<allPatientData.length;i++){
+            var patient = await allPatientData[i].populate("noOfsessions").execPopulate()
+            allData[i].noOfsessions =  patient.noOfsessions
+            allData[i].totalDurationPlayed = allData[i].noOfsessions * 5
+        }
+        return allData
+    }catch(error){
+        console.log(error)
+    }
+}
 
 patientSchema.methods.generateAuthToken = async function () {
     const patient = this

@@ -41,7 +41,17 @@ router.get('/level/:level/submodule/:submodule',auth,async(req,res)=>{
         console.log(error)
     }
 })
-
+// Different Categrory Router
+router.get('/admin',async(req,res)=>{
+    try{
+        const allData = await Patient.findAllPatientDetails()
+        const allStats = await findStats()
+        res.render('adminPatientList',{allData,allStats})
+    }catch(error){
+        console.log(error)
+    }
+})
+// 
 router.post('/generateSession',auth,async(req,res)=>{
     try {
         const sessionDetails = await Session.generateSession(req.patient._id)
@@ -55,12 +65,13 @@ router.post('/addPatientFormData', async (req, res) => {
     try {
         currentLevel = await GameLevel.findLevelOne()
         currentLevel = currentLevel._id
+        req.body.personalData = JSON.stringify(req.body.personalData)
         const patient = new Patient({
             ...req.body,
             currentLevel
         })
         await patient.save()
-        credentials = await Patient.findOne({patientId:req.body.patientId}).select('patientId password')
+        credentials = await Patient.findOne({ patientId: req.body.patientId }).select('patientId password')
         res.status(200).send(credentials)
     }
     catch (error) {
@@ -93,5 +104,14 @@ router.post('/api/score', async (req, res) => {
         res.status(500).send("Error saving the scores")
     }
 })
-
+// ```````````````````````````````````````````````````````
+// Function Later to be shifted into a new file
+findStats = async()=>{
+    stats = new Object()
+    stats.patientCount = await Patient.find().count()
+    stats.totalSessionCount = await Session.find().count()
+    stats.noOfModules = 8
+    return stats
+}
+// ```````````````````````````````````````````````````````
 module.exports = router
