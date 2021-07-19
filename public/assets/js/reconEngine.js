@@ -108,28 +108,19 @@ speak = function (val, wordId) {
   correctVal = val.toUpperCase()
   console.log('Ready to receive a speech command.');
 }
-
+var playbackSpeed = document.getElementById('playbackspeedjhvjkvjkv');
+// Edited for Google TTS
 listen = function (val, wordId) {
-
   if (synth.speaking) {
     console.error('speechSynthesis.speaking');
     return;
   }
-  var utterThis = new SpeechSynthesisUtterance(val);
-  utterThis.onend = function (event) {
-    console.log('SpeechSynthesisUtterance.onend');
-  }
-  utterThis.onerror = function (event) {
-    console.error('SpeechSynthesisUtterance.onerror');
-  }
-  utterThis.lang = 'hi-IN'
-  utterThis.pitch = 1;
-  utterThis.rate = 1;
-  console.log(utterThis)
-  synth.speak(utterThis);
-
+  audioFileTargetPath = '../../../assets/audio/tts/' + val + '.mp3'
+  console.log("Playback Speed is  ",playbackSpeed.value)
+  audio = new Audio(audioFileTargetPath)
+  audio.playbackRate = playbackSpeed.value;
+  audio.play()
 }
-
 
 recognition.onresult = function (event) {
   // The SpeechRecognitionEvent results property returns a SpeechRecognitionResultList object
@@ -156,7 +147,7 @@ recognition.onresult = function (event) {
 
 recognition.onspeechend = function () {
   recognition.stop();
-}
+} 
 
 recognition.onnomatch = function (event) {
   diagnostic.textContent = "Incorrect.";

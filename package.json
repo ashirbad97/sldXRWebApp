@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/app.js",
   "dependencies": {
-    "crypto": "^1.0.1"
+    "crypto": "^1.0.1",
+    "nouislider": "^15.2.0"
   },
   "devDependencies": {
     "body-parser": "^1.19.0",
