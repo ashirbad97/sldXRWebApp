@@ -16,14 +16,16 @@ const app = express()
 const publicDirectoryPath = path.join(__dirname,'../public')
 const viewsPath = path.join(__dirname,'../templates/views')
 const partialsPath = path.join(__dirname,'../templates/partials')
-const publicCertificatePath = path.join(__dirname,'sslcert/sldapp.ml.cer')
-const privateCertificatePath = path.join(__dirname,'sslcert/sldapp.ml.key')
+// Only to be used when running stand alone, currently being managed by the Nginx Web Server
+
+// const publicCertificatePath = path.join(__dirname,'sslcert/sldapp.ml.cer')
+// const privateCertificatePath = path.join(__dirname,'sslcert/sldapp.ml.key')
 
 //  Path for SSL certificates
-const options = {
-  cert: fs.readFileSync(publicCertificatePath),
-  key: fs.readFileSync(privateCertificatePath)
-};
+// const options = {
+//   cert: fs.readFileSync(publicCertificatePath),
+//   key: fs.readFileSync(privateCertificatePath)
+// };
 
 // Configuring hbs template engine
 
@@ -63,9 +65,9 @@ app.use(express.static(publicDirectoryPath))
 
 // Middleware function to setup CORS and Force HTTPS, * Has to be placed before assigning any routers else won't work
 app.use(function(req, res, next) {
-    // Forcing HTTPS, * This forces all the connection to go through HTTPS as a hard forcing 
-    if (!req.secure)
-      return res.redirect(301,"https://" + req.headers.host + req.url);
+    // Forcing HTTPS, * This forces all the connection to go through HTTPS as a hard forcing [Was removed as Nginx handled it]
+    // if (!req.secure)
+    //   return res.redirect(301,"https://" + req.headers.host + req.url);
     // Setup CORS Functionality
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -84,9 +86,9 @@ app.set('views',viewsPath)
 // Assigning hbs configurations
 app.set('view engine','hbs')
 
-app.listen(80)
+app.listen(8000)
 
-https.createServer(options, app).listen(443,()=>{
-  console.log("Secure Server has started running")
-});
+// https.createServer(options, app).listen(443,()=>{
+//   console.log("Secure Server has started running")
+// });
  
