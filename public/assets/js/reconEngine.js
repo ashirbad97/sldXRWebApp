@@ -109,14 +109,22 @@ speak = function (val, wordId) {
   console.log('Ready to receive a speech command.');
 }
 var playbackSpeed = document.getElementById('playbackspeedjhvjkvjkv');
+var audioSource = document.getElementById('voices')
 // Edited for Google TTS
 listen = function (val, wordId) {
   if (synth.speaking) {
     console.error('speechSynthesis.speaking');
     return;
   }
-  audioFileTargetPath = '../../../assets/audio/tts/' + val + '.mp3'
+  console.log('Audio Source is '+audioSource.value)
+  if (audioSource.value=='Google'){
+    audioFileTargetPath = '../../../assets/audio/tts/' + val + '.mp3'
+  }
+  if (audioSource.value=='Sayoni'){
+    audioFileTargetPath = '../../../assets/audio/sayoni/' + val + '.m4a'
+  }
   console.log("Playback Speed is  ",playbackSpeed.value)
+  
   audio = new Audio(audioFileTargetPath)
   audio.playbackRate = playbackSpeed.value;
   audio.play()
